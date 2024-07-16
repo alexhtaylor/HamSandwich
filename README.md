@@ -1,6 +1,6 @@
 # HamSandwich
 
-To run this app, download the repository and navigate to the film_web_service directory in your terminal.
+To download this repository, run `git clone https://github.com/alexhtaylor/HamSandwich.git` in your terminal and navigate to the HamSandwich directory.
 
 Ensure you have Ruby installed by running `ruby -v` in your terminal. 
 
