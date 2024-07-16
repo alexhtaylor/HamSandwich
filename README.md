@@ -8,6 +8,4 @@ Run `bundle install` to install the necessary gems.
 
 Run `ruby app.rb` to launch the web service application.
 
-In your browser, visit `http://localhost:9292/` to use the web service. Execute requests in the URL format `http://localhost:9292/?actor=Firstname_Surname` or `http://localhost:9292?film=Film_Name`
-
-Alternatively, open a new tab in your terminal and you may execute requests in the format `curl "http://localhost:9292?actor=Firstname_Surname"` or `curl "http://localhost:9292?film=Film_Name"`
+In your browser, visit `http://localhost:9292/` to use the web service. Alternatively, you can use the web service with cURL requests from a new terminal window.
