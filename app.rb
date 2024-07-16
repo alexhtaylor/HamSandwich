@@ -19,11 +19,13 @@ get '/' do
   film = params['film']&.gsub('_', ' ')
 
   if actor
-    # Return cached result if available
+    # Return cached results for actor if available
     if ACTOR_CACHE.key?(actor)
-        LOGGER.info("Returning cached data for actor") # Log use of the cache
+        LOGGER.info("Returning cached data for actor") # Log use of the cache for testing
         return ACTOR_CACHE[actor].to_json
     end
+
+    # Construct SPARQL query for the actor param
     query = <<-SPARQL
       SELECT ?filmLabel WHERE {
         ?film rdf:type dbo:Film .
@@ -34,21 +36,29 @@ get '/' do
       }
     SPARQL
 
-    results = sparql.query(query)
-    films = results.map { |result| result[:filmLabel].to_s }
-    LOGGER.info("Fetched data from DBpedia for actor") # Log use of DBpedia
-    response = { films: films }
-    ACTOR_CACHE[actor] = response
+    results = sparql.query(query) # execute the query and store the results
+    films = results.map { |result| result[:filmLabel].to_s } # format the results
+    LOGGER.info("Fetched data from DBpedia for actor") # Log use of DBpedia for testing
 
-    response.to_json
+    if films.empty? 
+      status 404
+      response = { error: "No films found for the actor '#{actor}'" }
+    else
+      response = { films: films }
+    end
+
+    ACTOR_CACHE[actor] = response # cache the response
+    
+    response.to_json # return the json formatted response
 
   elsif film
     # Return cached result if available
     if FILM_CACHE.key?(film)
-        LOGGER.info("Returning cached data for film") # Log use of cache
+        LOGGER.info("Returning cached data for film") # Log use of cache for testing
         return FILM_CACHE[film].to_json 
     end
 
+    # Construct SPARQL query for the film param
     query = <<-SPARQL
       SELECT ?actorLabel WHERE {
         ?film rdf:type dbo:Film .
@@ -59,15 +69,22 @@ get '/' do
       }
     SPARQL
 
-    results = sparql.query(query)
-    actors = results.map { |result| result[:actorLabel].to_s }
-    LOGGER.info("Fetched data from DBpedia for film") # Log use of DBpedia
-    response = { actors: actors }
-    FILM_CACHE[film] = response
+    results = sparql.query(query) # execute the query and store the results
+    actors = results.map { |result| result[:actorLabel].to_s } # format the results
+    LOGGER.info("Fetched data from DBpedia for film") # Log use of DBpedia for testing
+    
+    if actors.empty?
+      status 404
+      response = { error: "No actors found for the film '#{film}'" }
+    else
+      response = { actors: actors }
+    end
+    FILM_CACHE[film] = response # cache the response
 
-    response.to_json
+    response.to_json # return the json formatted response
 
   else
+    # Error message to user if invalid parameters are passed
     status 400
     { error: 'Please provide either an actor or a film parameter.' }.to_json
   end
