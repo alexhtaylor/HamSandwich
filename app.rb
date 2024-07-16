@@ -14,7 +14,7 @@ LOGGER = Logger.new(STDOUT)
 get '/' do
   content_type :json
 
-  # Format the actor and film params correctly
+  # Format the actor and film parameters correctly
   actor = params['actor']&.gsub('_', ' ')
   film = params['film']&.gsub('_', ' ')
 
@@ -58,7 +58,7 @@ get '/' do
         return FILM_CACHE[film].to_json 
     end
 
-    # Construct SPARQL query for the film param
+    # Construct SPARQL query for the film parameter
     query = <<-SPARQL
       SELECT ?actorLabel WHERE {
         ?film rdf:type dbo:Film .
@@ -79,6 +79,7 @@ get '/' do
     else
       response = { actors: actors }
     end
+
     FILM_CACHE[film] = response # cache the response
 
     response.to_json # return the json formatted response
