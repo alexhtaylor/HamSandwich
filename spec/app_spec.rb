@@ -12,10 +12,10 @@ RSpec.describe 'Film Service' do
     end
 
     before do
-        # Reset the caches before each test to ensure queries are testes correctly
+        # Reset the caches before each test to ensure queries are tested correctly
         FILM_CACHE.clear 
         ACTOR_CACHE.clear
-        # initialise logger to track cache useage
+        # initialise logger to track cache use
         @log_output = StringIO.new
         LOGGER.instance_variable_set(:@logdev, Logger::LogDevice.new(@log_output))
     end
