@@ -11,6 +11,7 @@ FILM_CACHE = {}
 ACTOR_CACHE = {}
 LOGGER = Logger.new(STDOUT)
 
+
 get '/' do
   content_type :json
 
@@ -36,7 +37,15 @@ get '/' do
       }
     SPARQL
 
-    results = sparql.query(query) # execute the query and store the results
+    begin
+      # attempt to execute the query and store the results
+      results = sparql.query(query)
+    rescue StandardError => e
+      # return an error message to the user if there is a problem querying DBpedia
+      status 500
+      return { error: "Unable to query the DBpedia database. #{e.message}" }.to_json
+    end 
+
     films = results.map { |result| result[:filmLabel].to_s } # format the results
     LOGGER.info("Fetched data from DBpedia for actor") # Log use of DBpedia for testing
 
@@ -69,7 +78,15 @@ get '/' do
       }
     SPARQL
 
-    results = sparql.query(query) # execute the query and store the results
+    begin
+    # attempt to execute the query and store the results
+      results = sparql.query(query)
+    rescue StandardError => e
+      # return an error message to the user if there is a problem querying DBpedia
+      status 500
+      return { error: "Unable to query the DBpedia database. #{e.message}" }.to_json
+    end 
+
     actors = results.map { |result| result[:actorLabel].to_s } # format the results
     LOGGER.info("Fetched data from DBpedia for film") # Log use of DBpedia for testing
     
