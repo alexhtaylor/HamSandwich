@@ -2,6 +2,8 @@ require 'rack/test'
 require_relative '../app.rb'
 require 'stringio'
 
+# to run tests: bundle exec rspec
+
 ENV['RACK_ENV'] = 'test'
 
 RSpec.describe 'Film Service' do

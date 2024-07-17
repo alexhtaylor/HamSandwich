@@ -9,6 +9,7 @@ sparql = SPARQL::Client.new("http://dbpedia.org/sparql")
 # Initialize in-memory caches for actors and films
 FILM_CACHE = {}
 ACTOR_CACHE = {}
+# Initialize logger to track caching
 LOGGER = Logger.new(STDOUT)
 
 
